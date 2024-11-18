@@ -1,27 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
-
-# Project name
-project(CFGGenerator)
+project(CFGProject)
 
 # Set C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 14)
 
-# Find Clang/LLVM libraries
-find_package(LLVM REQUIRED CONFIG)
+# Find Clang libraries
+find_package(Clang REQUIRED CONFIG)
 
-# Include Clang headers
-include_directories(${LLVM_INCLUDE_DIRS})
-add_definitions(${LLVM_DEFINITIONS})
+# Include directories for Clang
+include_directories(${Clang_INCLUDE_DIRS})
+link_directories(${Clang_LIBRARY_DIRS})
 
-# Add source files
-add_executable(cfg_generator cfg_generator.cpp)
-
-# Link against Clang libraries
-target_link_libraries(cfg_generator
-    clangAST
-    clangASTMatchers
-    clangBasic
-    clangFrontend
-    clangTooling
-)
+# Add executable and link libraries
+add_executable(CFGProject src/main.cpp src/CFG.cpp src/CFGBuilder.cpp src/ASTConsumer.cpp)
+target_link_libraries(CFGProject ${Clang_LIBRARIES})
