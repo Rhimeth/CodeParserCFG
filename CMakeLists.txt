@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.10)
-project(CFGProject)
-
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 14)
-
-# Find Clang libraries
-find_package(Clang REQUIRED)
+# Locate LLVM and Clang 18
+execute_process(
+    COMMAND llvm-config --includedir
+    OUTPUT_VARIABLE LLVM_INCLUDE_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(
+    COMMAND llvm-config --libdir
+    OUTPUT_VARIABLE LLVM_LIBRARY_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 # Include directories for Clang
-include_directories(${Clang_INCLUDE_DIRS})
-link_directories(${Clang_LIBRARY_DIRS})
+include_directories(${LLVM_INCLUDE_DIR}/clang)
+link_directories(${LLVM_LIBRARY_DIR})
 
-add_definitions(${LLVM_DEFINITIONS})
-
-# Add executable and link libraries
-add_executable(CFGProject src/main.cpp src/CFG.cpp src/CFGBuilder.cpp src/ASTConsumer.cpp)
-target_link_libraries(CFGProject ${Clang_LIBRARIES})
+# Add your executable
+add_executable(CFGProject ${SOURCES})
+target_link_libraries(CFGProject clang)
