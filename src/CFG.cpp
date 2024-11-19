@@ -1,5 +1,26 @@
 #include "CFG.h"
 #include <iostream>
+#include <fstream>
+#include "CFGNode.h"
+#include <unordered_map>
+
+class CFG {
+
+public:
+
+    CFGNode* addNode(const std::string &label);
+
+    void addEdge(CFGNode *from, CFGNode *to);
+
+    void exportToDot(const std::string &filename) const;
+
+    ~CFG();
+
+private:
+
+    std::unordered_map<std::string, CFGNode*> nodes;
+
+};
 
 CFGNode* CFG::addNode(const std::string &label) {
     if (nodes.find(label) == nodes.end()) {
@@ -10,7 +31,7 @@ CFGNode* CFG::addNode(const std::string &label) {
 
 void CFG::addEdge(CFGNode *from, CFGNode *to) {
     if (from && to) {
-        from->successors.push_back(to);
+        from->successors.push_back(std::shared_ptr<CFGNode>(to));
     }
 }
 
@@ -23,7 +44,7 @@ void CFG::exportToDot(const std::string &filename) const {
     out << "digraph CFG {" << std::endl;
     for (const auto &pair : nodes) {
         const auto *node = pair.second;
-        for (const auto *succ : node->successors) {
+        for (const std::shared_ptr<CFGNode> &succ : node->successors) {
             out << "    \"" << node->label << "\" -> \"" << succ->label << "\";" << std::endl;
         }
     }
