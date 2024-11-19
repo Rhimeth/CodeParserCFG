@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)  # Specify the minimum version of CMake
 project(CFGProject)  # Set the project name
 
 # Set the C++ standard
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 18)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Locate LLVM and Clang
